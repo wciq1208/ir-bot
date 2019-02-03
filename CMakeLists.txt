@@ -4,8 +4,11 @@ project(coolq-cpp-sdk)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "/utf-8 ${CMAKE_CXX_FLAGS}")  # use UTF-8 source files
 set(CMAKE_CXX_FLAGS "/MP ${CMAKE_CXX_FLAGS}")  # build with object level parallelism
+set(CMAKE_CXX_FLAGS "-O2 -Wall ${CMAKE_CXX_FLAGS}")  # build with object level parallelism
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+
+link_directories(${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib)
 
 include(cotire)
 include(FindVcpkgIncludeDir)
@@ -20,6 +23,11 @@ add_definitions(-DBOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE
                 -DNOMINMAX)
 
 find_package(Iconv REQUIRED)
+find_package(Curl REQUIRED)
+find_package(Boost_Program_Options REQUIRED)
+find_package(fmt CONFIG REQUIRED)
+
+set(OTHER fmt::fmt fmt::fmt-header-only)
 
 include(FixLinkConflict)
 
@@ -27,7 +35,7 @@ file(GLOB_RECURSE SOURCE_FILES src/*.cpp)
 set(LIB_NAME "com.example.demo")
 add_library(${LIB_NAME} SHARED ${SOURCE_FILES})
 
-target_link_libraries(${LIB_NAME} ${ICONV_AND_DEPS_LIBRARIES})
+target_link_libraries(${LIB_NAME} PRIVATE ${ICONV_AND_DEPS_LIBRARIES} ${CURL_AND_DEPS_LIBRARIES} ${OTHER} ${Boost_LIBRARIES})
 
 cotire(${LIB_NAME})
 

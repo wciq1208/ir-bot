@@ -1,0 +1,24 @@
+find_path(CURL_INCLUDE_DIR curl/curl.h)
+find_package(ZLIB REQUIRED)
+
+find_library(CURL_LIBRARY NAMES libcurl curl)
+find_library(ZLIB_LIBRARY NAMES z zlib)
+
+if(CURL_INCLUDE_DIR AND CURL_LIBRARY)
+   set(CURL_FOUND TRUE)
+endif(CURL_INCLUDE_DIR AND CURL_LIBRARY)
+
+mark_as_advanced(
+  CURL_INCLUDE_DIR
+  CURL_LIBRARY
+  ZLIB_LIBRARY
+)
+
+if(CURL_FOUND)
+  set(CURL_INCLUDE_DIRS ${CURL_INCLUDE_DIR})
+  set(CURL_LIBRARIES ${CURL_LIBRARY})
+  set(CURL_AND_DEPS_LIBRARIES ${CURL_LIBRARY} ${CHARSET_LIBRARY} ${ZLIB_LIBRARY} Ws2_32.lib Wldap32.lib Crypt32.lib)
+  message(STATUS "Found Curl")
+else(CURL_FOUND)
+  message(FATAL_ERROR "Could not find Curl")
+endif(CURL_FOUND)

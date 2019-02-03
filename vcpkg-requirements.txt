@@ -1,2 +1,6 @@
 boost-algorithm
+boost-program-options
 libiconv
+curl
+nlohmann-json
+fmt
